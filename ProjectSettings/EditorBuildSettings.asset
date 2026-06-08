@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Banyo_Sahnesi.unity
+    guid: 0bce5907d797a4cd8b0660dc119867e8
+  - enabled: 1
+    path: Assets/Scenes/Salon_Sahnesi.unity
+    guid: 7677e60413f293a46a10ccf8f42015a9
+  - enabled: 1
+    path: Assets/Scenes/Yatak_Odasi_Sahnesi.unity
+    guid: 2b505eebdea149d4ba8683ee6b9b00c1
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_UseUCBPForAssetBundles: 0
