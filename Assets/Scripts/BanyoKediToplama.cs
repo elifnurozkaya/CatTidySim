@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class KediToplama : MonoBehaviour
+public class BanyoKediToplama : MonoBehaviour
 {
     [Header("Ayarlar")]
     public Transform agizNoktasi;
@@ -10,8 +10,8 @@ public class KediToplama : MonoBehaviour
     public GameObject kapiEngeli;
 
     [Header("Skor Sistemi")]
-    public int puan = 0;
-    public Text puanYazisiNesnesi;
+    // UIManager deðiþkenini sýnýfýn ÝÇÝNE aldýk ve eski deðiþkenleri sildik.
+    public UIManager uiManager;
 
     private GameObject agizdakiNesne = null;
     private GameObject yakindakiNesne = null;
@@ -21,14 +21,15 @@ public class KediToplama : MonoBehaviour
 
     void Start()
     {
-        if (puanYazisiNesnesi != null)
-        {
-            puanYazisiNesnesi.text = "Puan: " + puan;
-        }
-
+        // Eski Text güncelleme kodlarýný sildik.
         if (kapiEngeli != null)
         {
             kapiEngeli.SetActive(true);
+        }
+
+        if (uiManager != null)
+        {
+            uiManager.NesneSayaciniGuncelle(sepetlenenNesneSayisi, hedefNesneSayisi);
         }
     }
 
@@ -78,7 +79,7 @@ public class KediToplama : MonoBehaviour
             rb.isKinematic = false;
         }
 
-        // --- NESNENIN GERI ALINMASINI ENGELLEME ---
+        // --- NESNENÝN GERÝ ALINMASINI ENGELLEME ---
         Collider nesneCollider = agizdakiNesne.GetComponent<Collider>();
         if (nesneCollider != null)
         {
@@ -87,25 +88,27 @@ public class KediToplama : MonoBehaviour
 
         yakindakiNesne = null;
 
-        // --- PUANLAMA VE MESAJ KONTROLU ---
+        // --- PUANLAMA VE MESAJ KONTROLÜ (Sadece UIManager) ---
         if ((kirmiziNesneMi && sepetTuru == "Kirmizi") || (maviNesneMi && sepetTuru == "Mavi"))
         {
-            puan += 10;
-            Debug.Log("Dogru sepet! +10 Puan. Toplam Puan: " + puan);
+            // Doðru eþleþme
+            if (uiManager != null) uiManager.SkorEkle(10);
+            Debug.Log("Dogru sepet! +10 Puan eklendi.");
         }
         else
         {
-            puan -= 5;
-            Debug.LogWarning("Yanlis sepet! -5 Puan. Toplam Puan: " + puan);
-        }
-
-        if (puanYazisiNesnesi != null)
-        {
-            puanYazisiNesnesi.text = "Puan: " + puan;
+            // Yanlýþ eþleþme
+            if (uiManager != null) uiManager.SkorEkle(-5);
+            Debug.LogWarning("Yanlis sepet! -5 Puan dusuldu.");
         }
 
         sepetlenenNesneSayisi++;
         Debug.Log("Sepete atilan toplam nesne: " + sepetlenenNesneSayisi + " / " + hedefNesneSayisi);
+
+        if (uiManager != null)
+        {
+            uiManager.NesneSayaciniGuncelle(sepetlenenNesneSayisi, hedefNesneSayisi);
+        }
 
         if (sepetlenenNesneSayisi >= hedefNesneSayisi)
         {
@@ -142,7 +145,7 @@ public class KediToplama : MonoBehaviour
             if (sepetlenenNesneSayisi >= hedefNesneSayisi)
             {
                 Debug.Log("Salon sahnesine geciliyor...");
-                SceneManager.LoadScene("Salon_Sahnesi");
+                SceneManager.LoadScene("AraSahne_2");
             }
         }
     }

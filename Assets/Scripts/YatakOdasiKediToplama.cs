@@ -7,11 +7,10 @@ public class YatakOdasiKediToplama : MonoBehaviour
     [Header("Ayarlar")]
     public Transform agizNoktasi;
     public int hedefNesneSayisi = 4; // 2 Yesil + 2 Pembe Nesne
-    public GameObject kapiEngeli; // Yatak odasindan cikis kapisi engeli
+    public GameObject kapiEngeli; // Eðer geriye dönüþü engellemek istersen diye kalabilir
 
     [Header("Skor Sistemi")]
-    public int puan = 0;
-    public Text puanYazisiNesnesi;
+    public UIManager uiManager;
 
     [Header("Yatak Odasi Sepet Isimleri")]
     public string sepetY_Ismi = "Yatak_Odasi_Y_Sepet";
@@ -25,14 +24,15 @@ public class YatakOdasiKediToplama : MonoBehaviour
 
     void Start()
     {
-        if (puanYazisiNesnesi != null)
-        {
-            puanYazisiNesnesi.text = "Puan: " + puan;
-        }
-
+        // Baþlangýçta geriye dönük kapýyý kapatmak istiyorsan aktif kalýr
         if (kapiEngeli != null)
         {
             kapiEngeli.SetActive(true);
+        }
+
+        if (uiManager != null)
+        {
+            uiManager.NesneSayaciniGuncelle(sepetlenenNesneSayisi, hedefNesneSayisi);
         }
     }
 
@@ -41,12 +41,10 @@ public class YatakOdasiKediToplama : MonoBehaviour
         // --- 1. KUP MEKANIGI (SADECE 'R' TUSU) ---
         if (Input.GetKeyDown(KeyCode.R))
         {
-            // Agiz bossa ve yakinda KUP varsa 'R' ile agza al
             if (agizdakiNesne == null && yakindakiNesne != null && yakindakiNesne.CompareTag("TasinabilirKup"))
             {
                 NesneyiAgzaAl();
             }
-            // Agizda KUP varsa 'R' ile yere sabitle (Bir daha alinamaz)
             else if (agizdakiNesne != null && agizdakiNesne.CompareTag("TasinabilirKup"))
             {
                 KupuYereSabitle();
@@ -56,7 +54,6 @@ public class YatakOdasiKediToplama : MonoBehaviour
         // --- 2. NORMAL NESNE MEKANIGI (SADECE 'E' TUSU) ---
         if (Input.GetKeyDown(KeyCode.E))
         {
-            // Agiz bossa ve yakinda NORMAL nesne varsa 'E' ile agza al
             if (agizdakiNesne == null && yakindakiNesne != null)
             {
                 if (yakindakiNesne.CompareTag("Yesil_Nesne") || yakindakiNesne.CompareTag("Pembe_Nesne"))
@@ -64,7 +61,6 @@ public class YatakOdasiKediToplama : MonoBehaviour
                     NesneyiAgzaAl();
                 }
             }
-            // Agizda normal nesne varken sepete yakin Sakin 'E' ile sepete birak
             else if (agizdakiNesne != null && !agizdakiNesne.CompareTag("TasinabilirKup") && sepeteYakinMi)
             {
                 NesneyiSepeteBirak();
@@ -92,7 +88,6 @@ public class YatakOdasiKediToplama : MonoBehaviour
 
     void NesneyiSepeteBirak()
     {
-        // Isim kontrolunu banyo mantigindaki gibi Contains ile yapiyoruz
         bool yesilNesneMi = agizdakiNesne.name.Contains("NesneY");
         bool pembeNesneMi = agizdakiNesne.name.Contains("NesneP");
 
@@ -104,7 +99,6 @@ public class YatakOdasiKediToplama : MonoBehaviour
             rb.isKinematic = false;
         }
 
-        // Nesnenin bir daha geri alinmasini engelle
         Collider nesneCollider = agizdakiNesne.GetComponent<Collider>();
         if (nesneCollider != null)
         {
@@ -113,33 +107,34 @@ public class YatakOdasiKediToplama : MonoBehaviour
 
         yakindakiNesne = null;
 
-        // --- PUANLAMA VE ESLESME KONTROLU ---
+        // --- PUANLAMA KONTROLU ---
         if ((yesilNesneMi && sepetTuru == "Yesil") || (pembeNesneMi && sepetTuru == "Pembe"))
         {
-            puan += 10;
-            Debug.Log("Dogru sepet! +10 Puan. Toplam Puan: " + puan);
+            if (uiManager != null) uiManager.SkorEkle(10);
+            Debug.Log("Yatak Odasi - Dogru sepet! +10 Puan eklendi.");
         }
         else
         {
-            puan -= 5;
-            Debug.LogWarning("Yanlis sepet! -5 Puan. Toplam Puan: " + puan);
-        }
-
-        if (puanYazisiNesnesi != null)
-        {
-            puanYazisiNesnesi.text = "Puan: " + puan;
+            if (uiManager != null) uiManager.SkorEkle(-5);
+            Debug.LogWarning("Yatak Odasi - Yanlis sepet! -5 Puan dusuldu.");
         }
 
         sepetlenenNesneSayisi++;
         Debug.Log("Sepete atilan toplam nesne: " + sepetlenenNesneSayisi + " / " + hedefNesneSayisi);
 
-        // Hedefe ulasildiysa kapi aciliyor
+        if (uiManager != null)
+        {
+            uiManager.NesneSayaciniGuncelle(sepetlenenNesneSayisi, hedefNesneSayisi);
+        }
+
+        // --- DEÐÝÞEN ANA KISIM (KAPI YERÝNE DÝREKT KAZANMA) ---
         if (sepetlenenNesneSayisi >= hedefNesneSayisi)
         {
-            Debug.Log("TEBRIKLER! Yatak odasi nesneleri bitti. Kapi engeli kaldirildi!");
-            if (kapiEngeli != null)
+            Debug.Log("TEBRÝKLER! Tüm nesneler toplandý, oyun kazanýldý!");
+
+            if (uiManager != null)
             {
-                kapiEngeli.SetActive(false);
+                uiManager.OyunuKazan(); // Son nesne sepete girdiði saniye Win Paneli açýlýr
             }
         }
 
@@ -153,11 +148,10 @@ public class YatakOdasiKediToplama : MonoBehaviour
         Rigidbody rb = agizdakiNesne.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.isKinematic = true; // Fizigini dondur, havada/yerde çivi gibi sabit kalsin
+            rb.isKinematic = true;
         }
 
-        agizdakiNesne.tag = "Untagged"; // Etiketini bosa cikar ki kedi bir daha alamasin
-
+        agizdakiNesne.tag = "Untagged";
         Debug.Log("Kup yere sabitlendi ve kilitlendi: " + agizdakiNesne.name);
 
         agizdakiNesne = null;
@@ -175,7 +169,7 @@ public class YatakOdasiKediToplama : MonoBehaviour
             }
         }
 
-        // Sepetleri banyo mantigina gore algila
+        // Sepetleri algila
         if (other.gameObject.name == sepetY_Ismi)
         {
             sepeteYakinMi = true;
@@ -187,16 +181,7 @@ public class YatakOdasiKediToplama : MonoBehaviour
             sepetTuru = "Pembe";
         }
 
-        // Sonraki sahneye gecis tetikleyicisi (Eger kapidan geciliyorsa ve oyun bittiyse)
-        if (other.gameObject.name == "Ana_Menu_Gecis_Kapisi" || other.gameObject.name == "Sonraki_Seviye_Kapisi")
-        {
-            if (sepetlenenNesneSayisi >= hedefNesneSayisi)
-            {
-                Debug.Log("Sonraki sahneye geciliyor...");
-                // Buraya gecmek istedigin sahnenin adini yazabilirsin
-                // SceneManager.LoadScene("AnaMenu"); 
-            }
-        }
+        // Kapý algýlama kodlarý, artýk kapýya ihtiyacýmýz olmadýðý için silindi!
     }
 
     private void OnTriggerExit(Collider other)

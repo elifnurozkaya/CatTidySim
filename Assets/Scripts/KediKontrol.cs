@@ -50,6 +50,21 @@ public class KediHareket : MonoBehaviour
 
     void Update()
     {
+        // --- UI VE DURAKLATMA KONTROLÜ ---
+        if (Time.timeScale == 0f)
+        {
+            // Oyun durduysa fare imlecini görünür yap ve serbest býrak
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            return; // Oyun durduðu için Update'in geri kalanýný okuma (Kamera ve hareket donsun)
+        }
+        else
+        {
+            // Oyun devam ediyorsa fareyi tekrar gizle ve kilitle
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
         // 1. MOUSE LOOK
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
@@ -113,7 +128,7 @@ public class KediHareket : MonoBehaviour
             }
         }
 
-        // 6. KAMERA DUVARA CARPMA KONTROLU (YENI)
+        // 6. KAMERA DUVARA CARPMA KONTROLU
         KameraDuvarKontrolu();
     }
 
