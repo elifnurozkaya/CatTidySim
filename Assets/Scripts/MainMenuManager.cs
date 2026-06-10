@@ -7,6 +7,13 @@ public class MainMenuManager : MonoBehaviour
     public GameObject nasilOynanirPaneli;
     public GameObject emegiGecenlerPaneli;
 
+    private void Start()
+    {
+        // Ana menü yüklendiğinde farenin her koşulda görünür olduğundan emin ol
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Time.timeScale = 1f;
+    }
     // 1. OYUNU BAŞLAT BUTONU
     public void OyunuBaslat()
     {
