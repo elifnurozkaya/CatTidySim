@@ -6,11 +6,11 @@ public class SalonKediToplama : MonoBehaviour
 {
     [Header("Ayarlar")]
     public Transform agizNoktasi;
-    public int hedefNesneSayisi = 9; // Hiyerarþide toplam 9 nesne (3 Sari, 3 Kirmizi, 3 Mor) 
+    public int hedefNesneSayisi = 9; // Hiyerarï¿½ide toplam 9 nesne (3 Sari, 3 Kirmizi, 3 Mor) 
     public GameObject kapiEngeli;
 
     [Header("Skor Sistemi")]
-    // UIManager deðiþkenini sýnýfýn ÝÇÝNE aldýk ve eski deðiþkenleri tamamen temizledik.
+    // UIManager deï¿½iï¿½kenini sï¿½nï¿½fï¿½n ï¿½ï¿½ï¿½NE aldï¿½k ve eski deï¿½iï¿½kenleri tamamen temizledik.
     public UIManager uiManager;
 
     private GameObject agizdakiNesne = null;
@@ -21,7 +21,7 @@ public class SalonKediToplama : MonoBehaviour
 
     void Start()
     {
-        // Eski text atamasý silindi, sadece kapý kontrolü kaldý.
+        // Eski text atamasï¿½ silindi, sadece kapï¿½ kontrolï¿½ kaldï¿½.
         if (kapiEngeli != null)
         {
             kapiEngeli.SetActive(true);
@@ -68,12 +68,12 @@ public class SalonKediToplama : MonoBehaviour
 
     void NesneyiSepeteBirak()
     {
-        // 1. Nesne renklerini isim kontrolü ile ayýrt ediyoruz
+        // 1. Nesne renklerini isim kontrolï¿½ ile ayï¿½rt ediyoruz
         bool sariNesneMi = agizdakiNesne.name.Contains("NesneS");
         bool kirmiziNesneMi = agizdakiNesne.name.Contains("NesneK");
         bool morNesneMi = agizdakiNesne.name.Contains("NesneM");
 
-        // 2. Nesneyi aðýzdan fiziksel olarak býrakma iþlemleri
+        // 2. Nesneyi aï¿½ï¿½zdan fiziksel olarak bï¿½rakma iï¿½lemleri
         agizdakiNesne.transform.SetParent(null);
 
         Rigidbody rb = agizdakiNesne.GetComponent<Rigidbody>();
@@ -82,7 +82,7 @@ public class SalonKediToplama : MonoBehaviour
             rb.isKinematic = false;
         }
 
-        // Fiziksel olarak kedi tarafýndan tekrar hemen alýnmasýný engellemek için collider'ý kapatýyoruz
+        // Fiziksel olarak kedi tarafï¿½ndan tekrar hemen alï¿½nmasï¿½nï¿½ engellemek iï¿½in collider'ï¿½ kapatï¿½yoruz
         Collider nesneCollider = agizdakiNesne.GetComponent<Collider>();
         if (nesneCollider != null)
         {
@@ -91,29 +91,29 @@ public class SalonKediToplama : MonoBehaviour
 
         yakindakiNesne = null;
 
-        // 3. TEK VE NET EÞLEÞME KONTROLÜ (UIManager Entegrasyonlu)
+        // 3. TEK VE NET Eï¿½LEï¿½ME KONTROLï¿½ (UIManager Entegrasyonlu)
         if ((sariNesneMi && sepetTuru == "Sari") ||
             (kirmiziNesneMi && sepetTuru == "Kirmizi") ||
             (morNesneMi && sepetTuru == "Mor"))
         {
-            // DOÐRU EÞLEÞME
+            // DOï¿½RU Eï¿½LEï¿½ME
             if (uiManager != null)
             {
-                uiManager.SkorEkle(10); // UI ekranýndaki skoru 10 artýrýr
+                uiManager.SkorEkle(10); // UI ekranï¿½ndaki skoru 10 artï¿½rï¿½r
             }
             Debug.Log("Salon - Dogru sepet! +10 Puan eklendi.");
         }
         else
         {
-            // YANLIÞ EÞLEÞME
+            // YANLIï¿½ Eï¿½LEï¿½ME
             if (uiManager != null)
             {
-                uiManager.SkorEkle(-5); // UI ekranýndaki skoru 5 azaltýr
+                uiManager.SkorEkle(-5); // UI ekranï¿½ndaki skoru 5 azaltï¿½r
             }
             Debug.LogWarning("Salon - Yanlis sepet! -5 Puan dusuldu.");
         }
 
-        // 4. Hedef nesne ve kapý kontrolü
+        // 4. Hedef nesne ve kapï¿½ kontrolï¿½
         sepetlenenNesneSayisi++;
         Debug.Log("Salonda sepete atilan nesne: " + sepetlenenNesneSayisi + " / " + hedefNesneSayisi);
 
@@ -131,13 +131,13 @@ public class SalonKediToplama : MonoBehaviour
             }
         }
 
-        // Elimizdeki nesne referansýný temizliyoruz
+        // Elimizdeki nesne referansï¿½nï¿½ temizliyoruz
         agizdakiNesne = null;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Hiyerarþideki nesne adlarýna göre (NesneS, NesneK, NesneM) kedinin yaklaþmasýna izin veriyoruz
+        // Hiyerarï¿½ideki nesne adlarï¿½na gï¿½re (NesneS, NesneK, NesneM) kedinin yaklaï¿½masï¿½na izin veriyoruz
         if ((other.gameObject.name.Contains("NesneS") ||
              other.gameObject.name.Contains("NesneK") ||
              other.gameObject.name.Contains("NesneM")) && agizdakiNesne == null)
@@ -145,7 +145,7 @@ public class SalonKediToplama : MonoBehaviour
             yakindakiNesne = other.gameObject;
         }
 
-        // Salon sepetlerinin kontrolü
+        // Salon sepetlerinin kontrolï¿½
         if (other.gameObject.name == "Salon_S_Sepet")
         {
             sepeteYakinMi = true;
@@ -165,26 +165,48 @@ public class SalonKediToplama : MonoBehaviour
             Debug.Log("Mor sepetin yanindasin.");
         }
 
-        // Kapý kontrolü
-        if (other.gameObject.name == "Yatak_Odasina_Gecis_Kapisi")
+        // --- KAPIDAN GEÃ‡Ä°Åž VE SKOR KONTROLÃœ ---
+    if (other.gameObject.name == "Yatak_Odasina_Gecis_Kapisi")
+    {
+        if (sepetlenenNesneSayisi >= hedefNesneSayisi)
         {
-            if (sepetlenenNesneSayisi >= hedefNesneSayisi)
+            // Sahnede aktif olan UIManager'a ulaÅŸÄ±yoruz
+            UIManager uiManager = FindFirstObjectByType<UIManager>();
+
+            if (uiManager != null)
             {
-                Debug.Log("Yatak odasi sahnesine geciliyor...");
+                // Banyo barajÄ± olan 50 puanÄ± kontrol ediyoruz
+                if (uiManager.mevcutSkor >= 65)
+                {
+                    Debug.Log("Tebrikler! Yeterli skorla Salon sahnesine geciliyor...");
+                    SceneManager.LoadScene("AraSahne_3");
+                }
+                else
+                {
+                    // EÄŸer oyuncu tÃ¼m eÅŸyalarÄ± topladÄ± ama skoru 50'den dÃ¼ÅŸÃ¼kse (Ã¶rn: -40)
+                    Debug.Log("Skor yetersiz! Skor kaybetme paneli aciliyor...");
+                    uiManager.OyunuKaybetSkor();
+                }
+            }
+            else
+            {
+                // GÃ¼venlik Ã¶nlemi: EÄŸer UIManager sahnede bulunamazsa oyun kilitlenmesin diye direkt geÃ§sin
+                Debug.LogError("Sahnede UIManager bulunamadi!");
                 SceneManager.LoadScene("AraSahne_3");
             }
         }
     }
+    }
 
     private void OnTriggerExit(Collider other)
     {
-        // 1. Nesneden uzaklaþýldýðýnda referansý temizle
+        // 1. Nesneden uzaklaï¿½ï¿½ldï¿½ï¿½ï¿½nda referansï¿½ temizle
         if (other.gameObject == yakindakiNesne)
         {
             yakindakiNesne = null;
         }
 
-        // 2. Sepetten uzaklaþýldýðýnda durumu sýfýrla
+        // 2. Sepetten uzaklaï¿½ï¿½ldï¿½ï¿½ï¿½nda durumu sï¿½fï¿½rla
         if (other.gameObject.name == "Salon_S_Sepet" ||
             other.gameObject.name == "Salon_K_Sepet" ||
             other.gameObject.name == "Salon_M_Sepet")

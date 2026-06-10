@@ -10,7 +10,7 @@ public class BanyoKediToplama : MonoBehaviour
     public GameObject kapiEngeli;
 
     [Header("Skor Sistemi")]
-    // UIManager deðiþkenini sýnýfýn ÝÇÝNE aldýk ve eski deðiþkenleri sildik.
+    // UIManager deï¿½iï¿½kenini sï¿½nï¿½fï¿½n ï¿½ï¿½ï¿½NE aldï¿½k ve eski deï¿½iï¿½kenleri sildik.
     public UIManager uiManager;
 
     private GameObject agizdakiNesne = null;
@@ -21,7 +21,7 @@ public class BanyoKediToplama : MonoBehaviour
 
     void Start()
     {
-        // Eski Text güncelleme kodlarýný sildik.
+        // Eski Text gï¿½ncelleme kodlarï¿½nï¿½ sildik.
         if (kapiEngeli != null)
         {
             kapiEngeli.SetActive(true);
@@ -79,7 +79,7 @@ public class BanyoKediToplama : MonoBehaviour
             rb.isKinematic = false;
         }
 
-        // --- NESNENÝN GERÝ ALINMASINI ENGELLEME ---
+        // --- NESNENï¿½N GERï¿½ ALINMASINI ENGELLEME ---
         Collider nesneCollider = agizdakiNesne.GetComponent<Collider>();
         if (nesneCollider != null)
         {
@@ -88,16 +88,16 @@ public class BanyoKediToplama : MonoBehaviour
 
         yakindakiNesne = null;
 
-        // --- PUANLAMA VE MESAJ KONTROLÜ (Sadece UIManager) ---
+        // --- PUANLAMA VE MESAJ KONTROLï¿½ (Sadece UIManager) ---
         if ((kirmiziNesneMi && sepetTuru == "Kirmizi") || (maviNesneMi && sepetTuru == "Mavi"))
         {
-            // Doðru eþleþme
+            // Doï¿½ru eï¿½leï¿½me
             if (uiManager != null) uiManager.SkorEkle(10);
             Debug.Log("Dogru sepet! +10 Puan eklendi.");
         }
         else
         {
-            // Yanlýþ eþleþme
+            // Yanlï¿½ï¿½ eï¿½leï¿½me
             if (uiManager != null) uiManager.SkorEkle(-5);
             Debug.LogWarning("Yanlis sepet! -5 Puan dusuldu.");
         }
@@ -123,32 +123,55 @@ public class BanyoKediToplama : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
+{
+    if ((other.gameObject.name.Contains("NesneK") || other.gameObject.name.Contains("NesneM")) && agizdakiNesne == null)
     {
-        if ((other.gameObject.name.Contains("NesneK") || other.gameObject.name.Contains("NesneM")) && agizdakiNesne == null)
-        {
-            yakindakiNesne = other.gameObject;
-        }
+        yakindakiNesne = other.gameObject;
+    }
 
-        if (other.gameObject.name == "Banyo_K_Sepet")
-        {
-            sepeteYakinMi = true;
-            sepetTuru = "Kirmizi";
-        }
-        else if (other.gameObject.name == "Banyo_M_Sepet")
-        {
-            sepeteYakinMi = true;
-            sepetTuru = "Mavi";
-        }
+    if (other.gameObject.name == "Banyo_K_Sepet")
+    {
+        sepeteYakinMi = true;
+        sepetTuru = "Kirmizi";
+    }
+    else if (other.gameObject.name == "Banyo_M_Sepet")
+    {
+        sepeteYakinMi = true;
+        sepetTuru = "Mavi";
+    }
 
-        if (other.gameObject.name == "Salona_Gecis_Kapisi")
+    // --- KAPIDAN GEÃ‡Ä°Åž VE SKOR KONTROLÃœ ---
+    if (other.gameObject.name == "Salona_Gecis_Kapisi")
+    {
+        if (sepetlenenNesneSayisi >= hedefNesneSayisi)
         {
-            if (sepetlenenNesneSayisi >= hedefNesneSayisi)
+            // Sahnede aktif olan UIManager'a ulaÅŸÄ±yoruz
+            UIManager uiManager = FindFirstObjectByType<UIManager>();
+
+            if (uiManager != null)
             {
-                Debug.Log("Salon sahnesine geciliyor...");
+                // Banyo barajÄ± olan 50 puanÄ± kontrol ediyoruz
+                if (uiManager.mevcutSkor >= 50)
+                {
+                    Debug.Log("Tebrikler! Yeterli skorla Salon sahnesine geciliyor...");
+                    SceneManager.LoadScene("AraSahne_2");
+                }
+                else
+                {
+                    // EÄŸer oyuncu tÃ¼m eÅŸyalarÄ± topladÄ± ama skoru 50'den dÃ¼ÅŸÃ¼kse (Ã¶rn: -40)
+                    Debug.Log("Skor yetersiz! Skor kaybetme paneli aciliyor...");
+                    uiManager.OyunuKaybetSkor();
+                }
+            }
+            else
+            {
+                // GÃ¼venlik Ã¶nlemi: EÄŸer UIManager sahnede bulunamazsa oyun kilitlenmesin diye direkt geÃ§sin
+                Debug.LogError("Sahnede UIManager bulunamadi!");
                 SceneManager.LoadScene("AraSahne_2");
             }
         }
     }
+}
 
     private void OnTriggerExit(Collider other)
     {

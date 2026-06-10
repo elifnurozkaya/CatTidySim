@@ -683,21 +683,27 @@ MonoBehaviour:
   isimText: {fileID: 1827333463}
   mesajText: {fileID: 53261304}
   kediGorseli: {fileID: 1355649525}
-  adamGorseli: {fileID: 1172788857}
+  evSahibiGorseli: {fileID: 1172788857}
   diyaloglar:
-  - konusanKisi: Adam
-    cumle: "Vay can\u0131na, ger\xE7ekten harika i\u015F \xE7\u0131kard\u0131n. Banyodaki
-      t\xFCm arabalar\u0131 renklerine g\xF6re do\u011Fru kutulara yerle\u015Ftirmi\u015Fsin.
-      Kedilerin bu kadar organize olabildi\u011Fini bilmezdim."
-  - konusanKisi: Adam
-    cumle: "Al bakal\u0131m, bu ilk b\xF6l\xFCm i\xE7in hak etti\u011Fin su ve mama.
-      Afiyet olsun"
-  - konusanKisi: Adam
-    cumle: "Fakat i\u015Fimiz hen\xFCz bitmedi, \u015Fimdi s\u0131rada Salon var.
-      Salon daha geni\u015F bir alan oldu\u011Fu i\xE7in arabalar \xE7ok daha fazla
-      da\u011F\u0131lm\u0131\u015F durumda. S\xFCren ba\u015Flamadan yerini al istersen."
+  - konusanKisi: Ev Sahibi
+    cumle: "Vay can\u0131na, harika i\u015F \xE7\u0131kard\u0131n! Puan\u0131n gayet
+      iyi, kedilerin bu kadar organize olabildi\u011Fini hi\xE7 bilmezdim."
   - konusanKisi: Kedi
-    cumle: "Miyav! (Haz\u0131r\u0131m, s\u0131radaki odaya ge\xE7ebiliriz.)"
+    cumle: "M\u0131rrr..."
+  - konusanKisi: Ev Sahibi
+    cumle: "Fakat i\u015Fimiz hen\xFCz bitmedi, \u015Fimdi s\u0131rada Salon var.
+      Buras\u0131 daha geni\u015F oldu\u011Fu i\xE7in tam 9 oyuncak etrafa sa\xE7\u0131lm\u0131\u015F
+      durumda."
+  - konusanKisi: Ev Sahibi
+    cumle: "Kurallar\u0131 biliyorsun, do\u011Frular +10, yanl\u0131\u015Flar -5
+      puan.Sonraki oda kap\u0131s\u0131n\u0131n a\xE7\u0131lmas\u0131 i\xE7in bu
+      kez en az 65 puan yapman gerekiyor."
+  - konusanKisi: Ev Sahibi
+    cumle: "T\xFCm e\u015Fyalar\u0131 yerle\u015Ftirdi\u011Finde ve hedef puana ula\u015Ft\u0131\u011F\u0131nda
+      a\xE7\u0131lan kap\u0131dan son odaya ge\xE7ebilirsin. Sana g\xFCveniyorum!"
+  - konusanKisi: Kedi
+    cumle: "Miyav! (Haz\u0131r\u0131m, salonu da p\u0131r\u0131l p\u0131r\u0131l
+      yap\u0131p o kap\u0131dan ge\xE7ece\u011Fim!)"
   sonrakiSahneAdi: Salon_Sahnesi
 --- !u!1 &1355649524
 GameObject:

@@ -683,26 +683,39 @@ MonoBehaviour:
   isimText: {fileID: 1827333463}
   mesajText: {fileID: 53261304}
   kediGorseli: {fileID: 1355649525}
-  adamGorseli: {fileID: 1172788857}
+  evSahibiGorseli: {fileID: 1172788857}
   diyaloglar:
   - konusanKisi: Kedi
     cumle: Miyav...
-  - konusanKisi: Adam
-    cumle: "Ah, selam k\xFC\xE7\xFCk dostum. S\u0131r\u0131ls\u0131klam olmu\u015Fsun...
-      D\u0131\u015Far\u0131da kalmana g\xF6nl\xFCm elvermedi, ge\xE7 i\xE7eri bakal\u0131m."
+  - konusanKisi: Ev Sahibi
+    cumle: "Ah, selam k\xFC\xE7\xFCk dostum. \xDC\u015F\xFCm\xFC\u015F g\xF6z\xFCk\xFCyorsun...
+      D\u0131\u015Far\u0131da kalmana g\xF6nl\xFCm elvermedi, ge\xE7 i\xE7eri bakal\u0131m"
   - konusanKisi: Kedi
-    cumle: "Miyav? (Kutular\u0131 ve etraftaki arabalar\u0131 inceler)"
-  - konusanKisi: Adam
-    cumle: "Evin kusuruna bakma, ye\u011Fenim d\xFCn buradayd\u0131 ve t\xFCm renkli
-      oyuncak arabalar\u0131n\u0131 etrafa sa\xE7\u0131p gitmi\u015F. Benim de acil
-      bir toplant\u0131ya yeti\u015Fmem gerekiyor ve evi bu halde b\u0131rakmak istemiyorum."
-  - konusanKisi: Adam
-    cumle: "Bak ne diyece\u011Fim; e\u011Fer s\xFCren bitmeden bu odalardaki arabalar\u0131
-      kendi renklerindeki do\u011Fru kutulara tasnif edebilirsen, sana g\xFCzel bir
-      ziyafet \xE7ekerim. Hatta havalar so\u011Fuyor, istersen art\u0131k burada
-      kal\u0131rs\u0131n. Ne dersin, anla\u015Fal\u0131m m\u0131?"
+    cumle: "Miyav? (Te\u015Fekk\xFCrler ama i\xE7erisi neden bu kadar da\u011F\u0131n\u0131k?)"
+  - konusanKisi: Ev Sahibi
+    cumle: "Ye\u011Fenim oyuncaklar\u0131n\u0131 da\u011F\u0131tm\u0131\u015F ve
+      benim acil bir toplant\u0131ya yeti\u015Fmem gerek. Bana evi toplamakta yard\u0131m
+      edersen art\u0131k burada kalabilirsin."
   - konusanKisi: Kedi
-    cumle: "Miyav! (Anla\u015Ft\u0131k, ben i\u015Fe koyuluyorum.)"
+    cumle: "Miyav! (Anla\u015Ft\u0131k! Ne yapmam gerekiyor?)"
+  - konusanKisi: Ev Sahibi
+    cumle: "E\u015Fyalar\u0131 a\u011Fz\u0131na almak ve b\u0131rakmak i\xE7in klavyendeki
+      'E' tu\u015Funu kullan. Banyoda 8 oyuncak var, onlar\u0131 do\u011Fru renkteki
+      sepetlere ay\u0131rmal\u0131s\u0131n."
+  - konusanKisi: Ev Sahibi
+    cumle: "E\u015Fyalar\u0131 a\u011Fz\u0131na almak ve b\u0131rakmak i\xE7in klavyendeki
+      'E' tu\u015Funu kullan. Banyoda 8 oyuncak var, onlar\u0131 do\u011Fru renkteki
+      sepetlere ay\u0131rmal\u0131s\u0131n."
+  - konusanKisi: Ev Sahibi
+    cumle: "Do\u011Fru sepet sana +10 puan kazand\u0131r\u0131rken, yanl\u0131\u015F
+      sepet -5 puan kaybettirir. Bu odadan ge\xE7ebilmek i\xE7in en az 60 puan toplamal\u0131s\u0131n."
+  - konusanKisi: Ev Sahibi
+    cumle: "Sana her oda i\xE7in 3 dakika s\xFCre veriyorum. T\xFCm oyuncaklar\u0131
+      yerle\u015Ftirip en az 50 puan\u0131 ald\u0131\u011F\u0131nda a\xE7\u0131lan
+      kap\u0131dan di\u011Fer odaya ge\xE7ebilirsin!"
+  - konusanKisi: Kedi
+    cumle: "Miyav! (S\xFCre ve puan hedefi anla\u015F\u0131ld\u0131. \u0130\u015Fe
+      koyuluyorum!)"
   sonrakiSahneAdi: Banyo_Sahnesi
 --- !u!1 &1355649524
 GameObject:

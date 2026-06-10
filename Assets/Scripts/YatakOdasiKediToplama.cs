@@ -7,7 +7,7 @@ public class YatakOdasiKediToplama : MonoBehaviour
     [Header("Ayarlar")]
     public Transform agizNoktasi;
     public int hedefNesneSayisi = 4; // 2 Yesil + 2 Pembe Nesne
-    public GameObject kapiEngeli; // Eðer geriye dönüþü engellemek istersen diye kalabilir
+    public GameObject kapiEngeli; // Eï¿½er geriye dï¿½nï¿½ï¿½ï¿½ engellemek istersen diye kalabilir
 
     [Header("Skor Sistemi")]
     public UIManager uiManager;
@@ -24,7 +24,7 @@ public class YatakOdasiKediToplama : MonoBehaviour
 
     void Start()
     {
-        // Baþlangýçta geriye dönük kapýyý kapatmak istiyorsan aktif kalýr
+        // Baï¿½langï¿½ï¿½ta geriye dï¿½nï¿½k kapï¿½yï¿½ kapatmak istiyorsan aktif kalï¿½r
         if (kapiEngeli != null)
         {
             kapiEngeli.SetActive(true);
@@ -127,16 +127,30 @@ public class YatakOdasiKediToplama : MonoBehaviour
             uiManager.NesneSayaciniGuncelle(sepetlenenNesneSayisi, hedefNesneSayisi);
         }
 
-        // --- DEÐÝÞEN ANA KISIM (KAPI YERÝNE DÝREKT KAZANMA) ---
         if (sepetlenenNesneSayisi >= hedefNesneSayisi)
-        {
-            Debug.Log("TEBRÝKLER! Tüm nesneler toplandý, oyun kazanýldý!");
+    {
+        // Sahnede aktif olan UIManager'Ä± buluyoruz
+        UIManager uiManager = FindFirstObjectByType<UIManager>();
 
-            if (uiManager != null)
+        if (uiManager != null)
+        {
+            // Yatak odasÄ± barajÄ± olan 30 puanÄ± kontrol ediyoruz
+            if (uiManager.mevcutSkor >= 30)
             {
-                uiManager.OyunuKazan(); // Son nesne sepete girdiði saniye Win Paneli açýlýr
+                Debug.Log("Tebrikler! Yeterli skorla tÃ¼m nesneler toplandi. Oyun Kazanildi!");
+                uiManager.OyunuKazan(); // Proje Ã¶zetindeki WinPanel'i aÃ§an merkezi fonksiyon
+            }
+            else
+            {
+                Debug.Log("TÃ¼m nesneler toplandi ancak skor yetersiz! Skor kaybetme paneli aciliyor...");
+                uiManager.OyunuKaybetSkor(); // Dramatik sokaÄŸa atÄ±lma metni iÃ§eren panel
             }
         }
+        else
+        {
+            Debug.LogError("Sahnede UIManager bulunamadi!");
+        }
+    }
 
         agizdakiNesne = null;
     }
@@ -159,30 +173,55 @@ public class YatakOdasiKediToplama : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
+{
+    // Alinabilir nesneleri algila
+    if (agizdakiNesne == null)
     {
-        // Alinabilir nesneleri algila
-        if (agizdakiNesne == null)
+        if (other.CompareTag("Yesil_Nesne") || other.CompareTag("Pembe_Nesne") || other.CompareTag("TasinabilirKup"))
         {
-            if (other.CompareTag("Yesil_Nesne") || other.CompareTag("Pembe_Nesne") || other.CompareTag("TasinabilirKup"))
+            yakindakiNesne = other.gameObject;
+        }
+    }
+
+    // Sepetleri algila
+    if (other.gameObject.name == sepetY_Ismi)
+    {
+        sepeteYakinMi = true;
+        sepetTuru = "Yesil";
+    }
+    else if (other.gameObject.name == sepetP_Ismi)
+    {
+        sepeteYakinMi = true;
+        sepetTuru = "Pembe";
+    }
+
+    // --- BÃ–LÃœM SONU VE SKOR KONTROLÃœ (KAPISIZ SÄ°STEM) ---
+    // EÄŸer tÃ¼m nesneler sepetlendiyse direkt olarak kazanma/kaybetme kontrolÃ¼ yapÄ±yoruz
+    if (sepetlenenNesneSayisi >= hedefNesneSayisi)
+    {
+        // Sahnede aktif olan UIManager'Ä± buluyoruz
+        UIManager uiManager = FindFirstObjectByType<UIManager>();
+
+        if (uiManager != null)
+        {
+            // Yatak odasÄ± barajÄ± olan 30 puanÄ± kontrol ediyoruz
+            if (uiManager.mevcutSkor >= 30)
             {
-                yakindakiNesne = other.gameObject;
+                Debug.Log("Tebrikler! Yeterli skorla tÃ¼m nesneler toplandi. Oyun Kazanildi!");
+                uiManager.OyunuKazan(); // Proje Ã¶zetindeki WinPanel'i aÃ§an merkezi fonksiyon
+            }
+            else
+            {
+                Debug.Log("TÃ¼m nesneler toplandi ancak skor yetersiz! Skor kaybetme paneli aciliyor...");
+                uiManager.OyunuKaybetSkor(); // Dramatik sokaÄŸa atÄ±lma metni iÃ§eren panel
             }
         }
-
-        // Sepetleri algila
-        if (other.gameObject.name == sepetY_Ismi)
+        else
         {
-            sepeteYakinMi = true;
-            sepetTuru = "Yesil";
+            Debug.LogError("Sahnede UIManager bulunamadi!");
         }
-        else if (other.gameObject.name == sepetP_Ismi)
-        {
-            sepeteYakinMi = true;
-            sepetTuru = "Pembe";
-        }
-
-        // Kapý algýlama kodlarý, artýk kapýya ihtiyacýmýz olmadýðý için silindi!
     }
+}
 
     private void OnTriggerExit(Collider other)
     {

@@ -1,27 +1,42 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.SceneManagement; // Sahne geÃ§iÅŸleri iÃ§in ÅŸart
 
 public class MainMenuManager : MonoBehaviour
 {
-    private void Start()
-    {
-        // Ana menü sahnesi yüklendiği an fare imlecini görünür yap ve kilidi kaldır
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+    [Header("Paneller")]
+    public GameObject nasilOynanirPaneli;
+    public GameObject emegiGecenlerPaneli;
 
-        // Oyun duraklatılmış (Pause) durumdan gelindiyse zamanı normale döndür
-        Time.timeScale = 1f;
+    // 1. OYUNU BAÅLAT BUTONU
+    public void OyunuBaslat()
+    {
+        SceneManager.LoadScene("AraSahne_1"); // Ä°lk diyaloÄŸa gÃ¶nderir
     }
 
-    public void OyunaBasla()
+    // 2. NASIL OYNANIR BUTONU
+    public void NasilOynanirAc()
     {
-        // Banyo sahnesi ilk bölüm olduğu için onu yüklüyoruz.
-        SceneManager.LoadScene("AraSahne_1");
+        nasilOynanirPaneli.SetActive(true); // Paneli gÃ¶rÃ¼nÃ¼r yapar
     }
 
+    // 3. EMEÄÄ° GEÃ‡ENLER BUTONU
+    public void EmegiGecenlerAc()
+    {
+        emegiGecenlerPaneli.SetActive(true); // Paneli gÃ¶rÃ¼nÃ¼r yapar
+    }
+
+    // 4. GERÄ° DÃ–N BUTONLARI
+    public void PanelleriKapat()
+    {
+        // Ä°ki paneli de kapatÄ±r, hangisi aÃ§Ä±ksa o kapanmÄ±ÅŸ olur
+        nasilOynanirPaneli.SetActive(false);
+        emegiGecenlerPaneli.SetActive(false);
+    }
+
+    // 5. Ã‡IKIÅ BUTONU
     public void OyundanCik()
     {
-        Debug.Log("Oyundan çıkıldı!");
-        Application.Quit();
+        Debug.Log("Oyundan Ã§Ä±kÄ±lÄ±yor..."); // Editor'de Ã§alÄ±ÅŸtÄ±ÄŸÄ±nÄ± anlamamÄ±z iÃ§in
+        Application.Quit(); // GerÃ§ek (Build alÄ±nmÄ±ÅŸ) oyunu kapatÄ±r
     }
 }

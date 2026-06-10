@@ -3,8 +3,8 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.UI; // Image bileþenini kullanabilmek için
-using System.Collections; // Coroutine kullanabilmek için
+using UnityEngine.UI; 
+using System.Collections; 
 
 public class UIManager : MonoBehaviour
 {
@@ -12,18 +12,21 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI skorText;
     [SerializeField] private TextMeshProUGUI sureText;
     [SerializeField] private GameObject pausePaneli;
-    [SerializeField] private GameObject gameOverPaneli;
+    [SerializeField] private GameObject gameOverPanelSure; // SÃ¼re bitince aÃ§Ä±lacak panel
+    [SerializeField] private GameObject gameOverPanelSkor; // Puan yetmeyince aÃ§Ä±lacak panel
     [SerializeField] private GameObject winPaneli;
 
-    [Header("Oyun Deðerleri")]
-    [SerializeField, Min(0f)] private float kalanSure = 60f;
-    [SerializeField] private int toplamSkor = 0;
+    [Header("Oyun DeÄŸerleri")]
+    [SerializeField, Min(0f)] private float kalanSure = 180f; // KonuÅŸtuÄŸumuz gibi fix 3 dakika (180 saniye)
+    
+    // DiÄŸer scriptlerin (kapÄ±larÄ±n) hedefleri kontrol edebilmesi iÃ§in public yapÄ±ldÄ±
+    public int mevcutSkor = 0; 
 
     [Header("Ekran Efekti")]
     [SerializeField] private Image flashEkrani;
-    [SerializeField] private Color dogruRenk = new Color(0f, 1f, 0f, 0.3f); // %30 saydam yeþil
-    [SerializeField] private Color yanlisRenk = new Color(1f, 0f, 0f, 0.3f); // %30 saydam kýrmýzý
-    [SerializeField] private float fadeHizi = 2f; // Rengin kaybolma hýzý
+    [SerializeField] private Color dogruRenk = new Color(0f, 1f, 0f, 0.3f); // %30 saydam yeÅŸil
+    [SerializeField] private Color yanlisRenk = new Color(1f, 0f, 0f, 0.3f); // %30 saydam kÄ±rmÄ±zÄ±
+    [SerializeField] private float fadeHizi = 2f; // Rengin kaybolma hÄ±zÄ±
 
     [Header("Toplanan Nesne Gostergesi")]
     public TMP_Text toplananNesneText;
@@ -35,43 +38,58 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Time.timeScale = 1f;
-        // Oyuna baþlarken UI'nýn seçili bir öðeyle baþlamasýný engelle
+        // Oyuna baÅŸlarken UI'nÄ±n seÃ§ili bir Ã¶ÄŸeyle baÅŸlamasÄ±nÄ± engelle
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(null);
     }
-    [Header("Sahneye Özel Ayarlar")]
-    public float sahneSuresi = 90f; // Buraya Inspector'dan sahnene göre 30, 120 veya 90 yazacaksýn
+    
+    [Header("Sahneye Ã–zel Ayarlar")]
+    public float sahneSuresi = 180f; // Buraya Inspector'dan 180 yazabilirsin
 
     private void Start()
     {
-        kalanSure = sahneSuresi; // Ýþte kilit nokta! Oyun baþlar baþlamaz süre buradaki deðer olacak.
+        kalanSure = sahneSuresi; 
         UpdateScoreUI();
         UpdateSureUI();
+        
+        // BaÅŸlangÄ±Ã§ta tÃ¼m panellerin kapalÄ± olduÄŸundan emin ol
         if (pausePaneli) pausePaneli.SetActive(false);
-        if (gameOverPaneli) gameOverPaneli.SetActive(false);
+        if (gameOverPanelSure) gameOverPanelSure.SetActive(false);
+        if (gameOverPanelSkor) gameOverPanelSkor.SetActive(false);
         if (winPaneli) winPaneli.SetActive(false);
     }
 
     private void Update()
     {
-        // --- ESC TUÞU ÝLE DURAKLATMA KONTROLÜ ---
-        // Oyun bitmediyse ESC tuþuna basýldýðýnda durumu deðiþtir (Durdur/Devam Ettir)
+        // --- KRÄ°TÄ°K KONTROL: Kaybetme veya Kazanma ekranlarÄ± aÃ§Ä±ksa ---
+        bool surePaneliAcik = gameOverPanelSure != null && gameOverPanelSure.activeSelf;
+        bool skorPaneliAcik = gameOverPanelSkor != null && gameOverPanelSkor.activeSelf;
+        bool kazanmaPaneliAcik = winPaneli != null && winPaneli.activeSelf;
+
+        if (surePaneliAcik || skorPaneliAcik || kazanmaPaneliAcik)
+        {
+            Time.timeScale = 0f; // Arkadaki tÃ¼m fizik ve zamanÄ± dondurur
+            Cursor.lockState = CursorLockMode.None; // Fareyi serbest bÄ±rakÄ±r
+            Cursor.visible = true; // Fareyi gÃ¶rÃ¼nÃ¼r yapar
+            return; // ESC tuÅŸu dahil aÅŸaÄŸÄ±daki hiÃ§bir girdiyi okumaz!
+        }
+
+        // --- ESC TUÅžU Ä°LE DURAKLATMA KONTROLÃœ ---
         if (kalanSure > 0f && Input.GetKeyDown(KeyCode.Escape))
         {
             OyunDurumuDegistir();
         }
 
-        // Eðer oyun þu an duraklatýlmýþsa veya süre bittiyse aþaðýdaki süre sayacýný ÇALIÞTIRMA
         if (oyunDurduMu || kalanSure <= 0f) return;
 
-        // --- SÜRE SAYACI ---
+        // --- SÃœRE SAYACI ---
         kalanSure -= Time.deltaTime;
 
         if (kalanSure <= 0f)
         {
             kalanSure = 0f;
             UpdateSureUI();
-            OyunBitti();
+            OyunuKaybetSure(); // SÃ¼re bittiÄŸinde direkt sÃ¼re kaybetme fonksiyonunu Ã§aÄŸÄ±r
         }
         else
         {
@@ -82,21 +100,18 @@ public class UIManager : MonoBehaviour
     public void SkorEkle(int miktar)
     {
         if (miktar == 0) return;
-        toplamSkor += miktar;
+        mevcutSkor += miktar;
         UpdateScoreUI();
-        SkorDegisti?.Invoke(toplamSkor);
+        SkorDegisti?.Invoke(mevcutSkor);
 
-        // --- YENÝ EKLENEN EFEKT KISMI ---
         if (flashEkrani != null)
         {
             if (miktar > 0)
             {
-                // Artý puansa yeþil flash
                 StartCoroutine(EkranFlash(dogruRenk));
             }
             else
             {
-                // Eksi puansa kýrmýzý flash
                 StartCoroutine(EkranFlash(yanlisRenk));
             }
         }
@@ -105,10 +120,9 @@ public class UIManager : MonoBehaviour
     private void UpdateScoreUI()
     {
         if (skorText != null)
-            skorText.text = $"Skor: {toplamSkor}";
+            skorText.text = $"Skor: {mevcutSkor}";
     }
 
-    // Bu fonksiyonu her eþya toplandýðýnda çaðýracaðýz
     public void NesneSayaciniGuncelle(int toplanan, int hedef)
     {
         if (toplananNesneText != null)
@@ -122,7 +136,7 @@ public class UIManager : MonoBehaviour
         if (sureText == null) return;
         int dakika = Mathf.FloorToInt(kalanSure / 60f);
         int saniye = Mathf.FloorToInt(kalanSure % 60f);
-        sureText.text = $"Süre: {dakika:00}.{saniye:00}";
+        sureText.text = $"SÃ¼re: {dakika:00}:{saniye:00}"; // GÃ¶rsellik iÃ§in nokta yerine iki nokta konuldu
     }
 
     public void OyunuDurdur()
@@ -131,6 +145,11 @@ public class UIManager : MonoBehaviour
         oyunDurduMu = true;
         if (pausePaneli) pausePaneli.SetActive(true);
         Time.timeScale = 0f;
+        
+        // DuraklatÄ±ldÄ±ÄŸÄ±nda butona basabilmek iÃ§in fareyi aÃ§
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(null);
     }
@@ -141,6 +160,11 @@ public class UIManager : MonoBehaviour
         oyunDurduMu = false;
         if (pausePaneli) pausePaneli.SetActive(false);
         Time.timeScale = 1f;
+        
+        // Oyun devam edince fareyi kameraya geri kilitle
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(null);
     }
@@ -150,21 +174,38 @@ public class UIManager : MonoBehaviour
         if (oyunDurduMu) OyunuDevamEttir(); else OyunuDurdur();
     }
 
-    private void OyunBitti()
+    // 1. SÃœRE BÄ°TÄ°NCE Ã‡AÄžRILACAK FONKSÄ°YON
+    public void OyunuKaybetSure()
     {
         oyunDurduMu = true;
         Time.timeScale = 0f;
-        if (gameOverPaneli) gameOverPaneli.SetActive(true);
+        if (gameOverPanelSure) gameOverPanelSure.SetActive(true);
         OyunBittiEvent?.Invoke();
-        if (EventSystem.current != null)
-            EventSystem.current.SetSelectedGameObject(null);
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    // 2. PUAN YETMEYÄ°NCE Ã‡AÄžRILACAK FONKSÄ°YON
+    public void OyunuKaybetSkor()
+    {
+        oyunDurduMu = true;
+        Time.timeScale = 0f;
+        if (gameOverPanelSkor) gameOverPanelSkor.SetActive(true);
+        OyunBittiEvent?.Invoke();
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void OyunuKazan()
     {
         oyunDurduMu = true;
-        Time.timeScale = 0f; // Zamaný ve kedinin hareketini durdurur
-        if (winPaneli) winPaneli.SetActive(true); // Kazanma ekranýný açar
+        Time.timeScale = 0f; 
+        if (winPaneli) winPaneli.SetActive(true); 
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(null);
@@ -176,41 +217,45 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void AnaMenuyeDon(string sahneAdi = "AnaMenuSahnesi")
+    public void AnaMenuyeDon(string sahneAdi = "AnaMenuSahnesi") // Ana menÃ¼ sahnesinin adÄ±nÄ± Inspector'dan da girebilirsin
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(sahneAdi);
     }
 
-    public void OyunuSifirla(float yeniSure = 60f)
+    public void OyunuSifirla(float yeniSure = 180f)
     {
-        toplamSkor = 0;
+        mevcutSkor = 0;
         kalanSure = yeniSure;
         oyunDurduMu = false;
-        if (gameOverPaneli) gameOverPaneli.SetActive(false);
+        
+        if (gameOverPanelSure) gameOverPanelSure.SetActive(false);
+        if (gameOverPanelSkor) gameOverPanelSkor.SetActive(false);
         if (pausePaneli) pausePaneli.SetActive(false);
+        
         Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(null);
+            
         UpdateScoreUI();
         UpdateSureUI();
     }
 
     private IEnumerator EkranFlash(Color hedefRenk)
     {
-        // Ekraný anýnda belirlediðimiz renge (yarý saydam) boya
         flashEkrani.color = hedefRenk;
         Color suAnkiRenk = hedefRenk;
 
-        // Saydamlýk (Alpha - a) deðeri 0 olana kadar yavaþça düþür
         while (suAnkiRenk.a > 0f)
         {
             suAnkiRenk.a -= Time.deltaTime * fadeHizi;
             flashEkrani.color = suAnkiRenk;
-            yield return null; // Bir sonraki kareyi (frame) bekle
+            yield return null; 
         }
 
-        // Emin olmak için sonunda tamamen görünmez yap
         suAnkiRenk.a = 0f;
         flashEkrani.color = suAnkiRenk;
     }

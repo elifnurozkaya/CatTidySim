@@ -6,31 +6,30 @@ using TMPro;
 [System.Serializable]
 public class DiyalogSatiri
 {
-    public string konusanKisi; // "Kedi" veya "Adam"
+    public string konusanKisi; 
     [TextArea(3, 10)]
     public string cumle;
 }
 
 public class DinamikDiyalog : MonoBehaviour
 {
-    [Header("UI Referanslarý")]
+    [Header("UI ReferanslarÄ±")]
     public TMP_Text isimText;
     public TMP_Text mesajText;
 
-    [Header("Karakter Görselleri")]
+    [Header("Karakter GÃ¶rselleri")]
     public Image kediGorseli;
-    public Image adamGorseli;
+    public Image evSahibiGorseli; // DeÄŸiÅŸken adÄ±nÄ± "evSahibiGorseli" olarak gÃ¼ncelledik
 
-    [Header("Diyalog Ayarlarý")]
+    [Header("Diyalog AyarlarÄ±")]
     public DiyalogSatiri[] diyaloglar;
     public string sonrakiSahneAdi;
 
     private int suAnkiIndex = 0;
 
-    // Normal renk (Tamamen görünür) ve Soluk renk (Yarý saydam ve biraz karanlýk)
-    // Normal renk (Tamamen görünür ve parlak)
+    // Normal renk (Tamamen gÃ¶rÃ¼nÃ¼r ve parlak)
     private Color aktifRenk = new Color(1f, 1f, 1f, 1f);
-    // Pasif renk (Saydamlýk YOK, sadece gölgede kalmýþ gibi koyu gri)
+    // Pasif renk (SaydamlÄ±k YOK, sadece gÃ¶lgede kalmÄ±ÅŸ gibi koyu gri)
     private Color pasifRenk = new Color(0.35f, 0.35f, 0.35f, 1f);
 
     void Start()
@@ -57,27 +56,27 @@ public class DinamikDiyalog : MonoBehaviour
 
     void SatiriOynat()
     {
-        // Metinleri güncelle
+        // Metinleri gÃ¼ncelle
         DiyalogSatiri aktifSatir = diyaloglar[suAnkiIndex];
         isimText.text = aktifSatir.konusanKisi;
         mesajText.text = aktifSatir.cumle;
 
-        // Konuþan kiþiye göre görselleri parlat/soluklaþtýr
+        // KonuÅŸan kiÅŸiye gÃ¶re gÃ¶rselleri parlat/soluklaÅŸtÄ±r
         if (aktifSatir.konusanKisi == "Kedi")
         {
             kediGorseli.color = aktifRenk;
-            adamGorseli.color = pasifRenk;
+            evSahibiGorseli.color = pasifRenk;
         }
-        else if (aktifSatir.konusanKisi == "Adam")
+        else if (aktifSatir.konusanKisi == "Ev Sahibi") // BurayÄ± "Ev Sahibi" olarak gÃ¼ncelledik
         {
-            adamGorseli.color = aktifRenk;
+            evSahibiGorseli.color = aktifRenk;
             kediGorseli.color = pasifRenk;
         }
         else
         {
-            // Eðer dýþ ses konuþuyorsa (örn: konusanKisi = "Sistem") ikisini de soluk yap
+            // EÄŸer dÄ±ÅŸ ses konuÅŸuyorsa (Ã–rn: konusanKisi = "Sistem") ikisini de soluk yap
             kediGorseli.color = pasifRenk;
-            adamGorseli.color = pasifRenk;
+            evSahibiGorseli.color = pasifRenk;
         }
     }
 }

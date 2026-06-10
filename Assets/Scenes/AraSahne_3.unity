@@ -683,23 +683,30 @@ MonoBehaviour:
   isimText: {fileID: 1827333463}
   mesajText: {fileID: 53261304}
   kediGorseli: {fileID: 1355649525}
-  adamGorseli: {fileID: 1172788857}
+  evSahibiGorseli: {fileID: 1172788857}
   diyaloglar:
-  - konusanKisi: Adam
-    cumle: "\"\u0130nan\u0131lmaz... Salondaki o karma\u015Fay\u0131 bile \xE7\xF6zm\xFC\u015Fs\xFCn. 
-      Ger\xE7ekten \xE7ok dikkatli bir kedisin."
+  - konusanKisi: Ev Sahibi
+    cumle: "\u0130nan\u0131lmaz... Salondaki karma\u015Fay\u0131 bile \xE7\xF6zd\xFCn
+      ve hedeflenen puan\u0131 tutturdun! Ger\xE7ekten \xE7ok yetenekli bir kedisin."
   - konusanKisi: Kedi
-    cumle: Miyavv~
-  - konusanKisi: Adam
-    cumle: "Hak etti\u011Fin \xF6d\xFCl mamas\u0131 burada. Enerjini topla \xE7\xFCnk\xFC
-      son bir odam\u0131z kald\u0131: Yatak Odas\u0131"
-  - konusanKisi: Adam
-    cumle: "Ye\u011Fenim en \xE7ok arabay\u0131 oraya saklam\u0131\u015F. Dolaplar\u0131n
-      alt\u0131, yata\u011F\u0131n arkas\u0131 her yer renkli arabalarla dolu. Buray\u0131
-      da ba\u015Far\u0131yla tamamlarsan, art\u0131k bu evin resmi olarak bir \xFCyesi
-      olacaks\u0131n. Sana g\xFCveniyorum"
+    cumle: "Miyav~ (Te\u015Fekk\xFCrler! Sonraki g\xF6rev nedir?)"
+  - konusanKisi: Ev Sahibi
+    cumle: "Enerjini topla \xE7\xFCnk\xFC son bir odam\u0131z kald\u0131: Yatak Odas\u0131.
+      Burada sadece 4 oyuncak var ama oyunu kazanmak i\xE7in en az 30 puan toplamal\u0131s\u0131n."
+  - konusanKisi: Ev Sahibi
+    cumle: "Burada y\xFCksekteki oyuncaklara ula\u015Fmak i\xE7in basamak olarak
+      kullanabilece\u011Fin b\xFCy\xFCk k\xFCpler g\xF6receksin. Onlar\u0131 ta\u015F\u0131y\u0131p
+      yerle\u015Ftirmek i\xE7in 'E' yerine 'R' tu\u015Funu kullanmal\u0131s\u0131n."
+  - konusanKisi: Ev Sahibi
+    cumle: "Fakat \xE7ok dikkat et! 'R' tu\u015Fuyla ta\u015F\u0131d\u0131\u011F\u0131n
+      bir k\xFCp\xFC yere b\u0131rakt\u0131\u011F\u0131nda oraya kilitlenir ve onu
+      bir daha asla geri alamazs\u0131n. Hamleni iyi d\xFC\u015F\xFCn."
+  - konusanKisi: Ev Sahibi
+    cumle: "Bu odada kap\u0131dan ge\xE7mene gerek yok. Hedef puana ula\u015F\u0131p
+      4 oyunca\u011F\u0131 da yerle\u015Ftirdi\u011Fin an oyunu kazanacak ve bu evin
+      resmi \xFCyesi olacaks\u0131n!"
   - konusanKisi: Kedi
-    cumle: "\"Miyav!\" (Son oda kald\u0131, onu da hallediyorum!)"
+    cumle: "Miyav!!! (K\xFCplere dikkat edece\u011Fim. Son oda, ba\u015Fl\u0131yoruz!)"
   sonrakiSahneAdi: Yatak_Odasi_Sahnesi
 --- !u!1 &1355649524
 GameObject:
